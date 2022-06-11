@@ -1,0 +1,19 @@
+{
+  "name": "term-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/uvu/bin.js -r tsm"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.16",
+    "ts-node": "^10.8.1",
+    "tsm": "^2.2.1",
+    "typescript": "^4.7.3",
+    "uvu": "^0.5.3"
+  }
+}
