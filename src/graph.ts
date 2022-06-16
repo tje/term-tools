@@ -79,15 +79,13 @@ export function barChartAlt (series: number[], config: IBarChartConfig) {
       let idxR = 0
       let idxL = 0
       if (pos >= y && pos < y + 1) {
-        idxR = Math.round(p * (characters[0].length - 1))
+        idxL = Math.round(p * (characters[0].length - 1))
       } else if (pos >= y + 1) {
-        idxR = characters[0].length - 1
+        idxL = characters[0].length - 1
       }
 
       if (doubleFit && pos2 !== null) {
         const p = pos2 % 1
-        idxL = idxR
-        idxR = 0
         if (pos2 >= y && pos2 < y + 1) {
           idxR = Math.round(p * (characters[0].length - 1))
         } else if (pos2 >= y + 1) {

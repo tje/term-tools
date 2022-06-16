@@ -7,6 +7,7 @@ export const PROGRESS_SPIN = {
   BASIC: '-\|/',
   TWO_DOTS: '⡈⠔⠢⢁',
   BRAILLE_LINEAR: '⣠⣄⡆⠇⠋⠙⠸⢰',
+  QUADS: '▖▌▛█▜▐▗ ',
 }
 
 export const GRAPH = {
@@ -16,5 +17,8 @@ export const GRAPH = {
     '⡄⣄⣤⣴⣼',
     '⡆⣆⣦⣶⣾',
     '⡇⣇⣧⣷⣿',
+  ],
+  BAR: [
+    ' ▁▂▃▄▅▆▇█',
   ],
 }
