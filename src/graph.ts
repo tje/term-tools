@@ -13,7 +13,6 @@ export function barChart (series: number[], config: IBarChartConfig): string[] {
   const characters = config.characters ?? GRAPH.BRAILLE
   const doubleFit = config.doubleFit
     ?? (config.characters === undefined || config.characters.length > 1)
-  console.log(config.characters?.length, doubleFit)
 
   const min = config.min ?? Math.min(...series)
   const max = config.max ?? Math.max(...series)
