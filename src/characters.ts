@@ -1,6 +1,7 @@
 export const PROGRESS_BAR = {
   SHADED: '█▓▒░ ',
   FINE: '█▉▊▋▌▍▎▏ ',
+  PIPS: '■▪· ',
 }
 
 export const PROGRESS_SPIN = {
@@ -17,6 +18,13 @@ export const GRAPH = {
     '⡄⣄⣤⣴⣼',
     '⡆⣆⣦⣶⣾',
     '⡇⣇⣧⣷⣿',
+  ],
+  BRAILLE_FLIPPED: [
+    '⠀⠈⠘⠸⢸',
+    '⠁⠉⠙⠹⢹',
+    '⠃⠋⠛⠻⢻',
+    '⠇⠏⠟⠿⢿',
+    '⡇⡏⡟⡿⣿',
   ],
   BAR: [
     ' ▁▂▃▄▅▆▇█',
