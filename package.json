@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "sc": "ts-node --",
+    "build": "tsc",
     "test": "./node_modules/uvu/bin.js -r tsm"
   },
   "keywords": [],
