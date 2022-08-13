@@ -5,7 +5,7 @@ export const PROGRESS_BAR = {
 }
 
 export const PROGRESS_SPIN = {
-  BASIC: '-\|/',
+  BASIC: '-\\|/',
   TWO_DOTS: '⡈⠔⠢⢁',
   BRAILLE_LINEAR: '⣠⣄⡆⠇⠋⠙⠸⢰',
   QUADS: '▖▌▛█▜▐▗ ',
