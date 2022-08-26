@@ -46,3 +46,65 @@ export function spinner (characters: string = PROGRESS_SPIN.BRAILLE_LINEAR, spee
     },
   }
 }
+
+type IAnimatedBarConfig = {
+  width: number
+  speed: number
+  characters: string
+  ease: (x: number) => number
+}
+
+export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | IAnimatedBarConfig['width']) {
+  const opts: IAnimatedBarConfig = {
+    width: 10,
+    speed: 500,
+    characters: PROGRESS_BAR.SHADED,
+    ease: (x) => x,
+  }
+  if (typeof configOrWidth === 'number') {
+    opts.width = configOrWidth
+  } else {
+    Object.assign(opts, configOrWidth)
+  }
+  opts.width = Math.max(0, Math.min(Number.MAX_SAFE_INTEGER, opts.width))
+  opts.speed = Math.max(0, opts.speed)
+
+  const { speed, width, characters, ease } = opts
+
+  let startTs = Date.now()
+  let from = 0
+  let to = 0
+
+  const update = (pos: number) => {
+    from = getPos()
+    to = pos
+    startTs = Date.now()
+  }
+
+  const getPos = () => {
+    const timePos = ease(Math.min(1, (Date.now() - startTs) / speed))
+    const pos = from + (to - from) * timePos
+    return pos
+  }
+
+  const toString = () => {
+    return progressBar(width, getPos(), characters)
+  }
+
+  return {
+    update,
+    toString,
+    [Symbol.toPrimitive] (hint: PrimitiveHint) {
+      switch (hint) {
+        case 'default':
+        case 'string':
+          return this.value
+        case 'number':
+          return getPos()
+      }
+    },
+    get value () {
+      return toString()
+    },
+  }
+}
