@@ -2,6 +2,7 @@ export const PROGRESS_BAR = {
   SHADED: '█▓▒░ ',
   FINE: '█▉▊▋▌▍▎▏ ',
   PIPS: '■▪· ',
+  BARS: '█▇▆▅▄▃▂▁ ',
 }
 
 export const PROGRESS_SPIN = {
