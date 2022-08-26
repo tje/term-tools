@@ -76,6 +76,9 @@ export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | 
   let to = 0
 
   const update = (pos: number) => {
+    if (pos === to) {
+      return
+    }
     from = getPos()
     to = pos
     startTs = Date.now()
