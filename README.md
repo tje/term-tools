@@ -17,6 +17,26 @@ const bar2 = tt.progressBar(10, 0.5, tt.PROGRESS_BAR.PIPS)
 console.log(bar2)
 ```
 
+### Animated progress bars
+
+`createAnimatedBar(config)`
+- `config` Progress bar settings:
+  - `config.width` Character length of bar
+  - `config.speed` *(optional)* Animation duration in milliseconds
+  - `config.characters` *(optional)* Character set to use, at least 3 characters
+  - `config.ease` *(optional)* Easing function to use (default linear)
+
+```js
+const bar = tt.createAnimatedBar({
+  width: 10,
+  characters: tt.PROGRESS_BAR.FINE,
+  ease: tt.EASING.CUBIC_OUT,
+  speed: 500,
+})
+bar.update(0.25)
+console.log(bar.toString())
+```
+
 ### Spinners
 
 `spinner([characters[, speed]])`
