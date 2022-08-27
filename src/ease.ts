@@ -1,5 +1,10 @@
 type FnEase = (x: number) => number
 
+/**
+ * Easing functions for use in widget animations.
+ *
+ * @see https://easings.net/
+ */
 export const EASING = {
   LINEAR: (x: number) => x,
   CUBIC_IN_OUT: (x: number) => x < 0.5 ? 4 * x * x * x : 1 - ((-2 * x + 2) ** 3) / 2,

@@ -1,5 +1,16 @@
 import { PROGRESS_BAR, PROGRESS_SPIN } from './characters'
 
+/**
+ * Renders a progress bar from a given character length and percentage value
+ *
+ * @example
+ * let progress = 0
+ * setInterval(() => {
+ *   const bar = progressBar(20, progress / 100)
+ *   process.stdout.write(`\r${bar} ${progress}%   `)
+ *   progress = (progress + 1) % 100
+ * }, 20)
+ */
 export function progressBar (width: number, progress: number, characters: string = PROGRESS_BAR.SHADED) {
   const fillNum = Math.min(progress * width, width)
   const barChars = Math.floor(fillNum)
@@ -29,6 +40,15 @@ function * createSpinGenerator (characters: string, speed = 0) {
     }
   }
 }
+
+/**
+ * Creates a self-stepping "spinner" instance that returns one character from a
+ * sequence based on an internal clock
+ *
+ * @example
+ * const spin = spinner()
+ * setInterval(() => process.stdout.write(`\r${spin.value} Loading...`), 20)
+ */
 export function spinner (characters: string = PROGRESS_SPIN.BRAILLE_LINEAR, speed = 50) {
   const gen = createSpinGenerator(characters, speed)
   return {
@@ -48,13 +68,35 @@ export function spinner (characters: string = PROGRESS_SPIN.BRAILLE_LINEAR, spee
 }
 
 type IAnimatedBarConfig = {
+  /** Width of bar in characters */
   width: number
+  /** Animation duration in milliseconds */
   speed: number
+  /** Character set to use, must be at least 3 characters */
   characters: string
+  /** Easing function */
   ease: (x: number) => number
 }
-
-export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | IAnimatedBarConfig['width']) {
+type IAnimatedBar = {
+  /**
+   * Update the percentage value of the progress bar
+   * @param {number} progress Number between 0 and 1
+   */
+  update: (progress: number) => void
+  /** Returns the rendered progress bar as a string */
+  toString: () => string
+}
+/**
+ * Creates a progress bar that animates as it is drawn.
+ *
+ * @example
+ * const bar = createAnimatedBar(15)
+ * setInterval(() => process.stdout.write(`\r${bar}  `), 20)
+ * setInterval(() => bar.update(Math.random()), 1000)
+ */
+export function createAnimatedBar (configOrWidth: number): IAnimatedBar
+export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig>): IAnimatedBar
+export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | IAnimatedBarConfig['width']): IAnimatedBar {
   const opts: IAnimatedBarConfig = {
     width: 10,
     speed: 500,
@@ -97,17 +139,15 @@ export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | 
   return {
     update,
     toString,
+    // @ts-ignore
     [Symbol.toPrimitive] (hint: PrimitiveHint) {
       switch (hint) {
         case 'default':
         case 'string':
-          return this.value
+          return toString()
         case 'number':
           return getPos()
       }
-    },
-    get value () {
-      return toString()
     },
   }
 }
