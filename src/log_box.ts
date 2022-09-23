@@ -4,6 +4,7 @@ type ILogBoxOptions = {
   height: number
   fadeDuration: number
   fadeDelay: number
+  fadeMode: 'instant' | 'succession'
   ease: (x: number) => number
 }
 
@@ -14,10 +15,11 @@ type ILogLine = {
 }
 
 export function createLogBox (options: Partial<ILogBoxOptions>) {
-  const opts = {
+  const opts: ILogBoxOptions = {
     height: 10,
     fadeDuration: 1000,
     fadeDelay: 500,
+    fadeMode: 'instant',
     ease: EASING.CUBIC_OUT,
     ...options,
   }
@@ -37,12 +39,17 @@ export function createLogBox (options: Partial<ILogBoxOptions>) {
 
   const render = (): string[] => {
     const out: string[] = []
-    for (const line of lines) {
-      const t = Date.now() - line.ts - opts.fadeDelay
+    lines.forEach((line, idx) => {
+      const now = Date.now()
+      let fd = opts.fadeDelay
+      if (opts.fadeMode === 'succession') {
+        fd = Math.max((lines[idx + 1]?.ts ?? now) - line.ts, fd)
+      }
+      const t = now - line.ts - fd
       const pos = clamp(opts.ease(t / opts.fadeDuration))
       const [ r, g, b ] = blendRange(pos, line.color, 0x888888)
       out.push(`\x1b[38;2;${r};${g};${b}m${line.text}\x1b[0m`)
-    }
+    })
     return out
   }
 
