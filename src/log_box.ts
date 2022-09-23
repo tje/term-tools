@@ -1,10 +1,15 @@
 import { EASING } from './ease'
 
 type ILogBoxOptions = {
+  /** Log box height in lines */
   height: number
+  /** Duration of color fade animation in milliseconds */
   fadeDuration: number
+  /** Animation start time delay in milliseconds */
   fadeDelay: number
+  /** Fade on log entry ('instant') or replacement ('succession') */
   fadeMode: 'instant' | 'succession'
+  /** Animation easing function */
   ease: (x: number) => number
 }
 
@@ -14,6 +19,10 @@ type ILogLine = {
   color: number
 }
 
+/**
+ * Creates a log box widget that renders a limited set of lines with animated
+ * color fade.
+ */
 export function createLogBox (options: Partial<ILogBoxOptions>) {
   const opts: ILogBoxOptions = {
     height: 10,
@@ -26,6 +35,11 @@ export function createLogBox (options: Partial<ILogBoxOptions>) {
 
   const lines: ILogLine[] = []
 
+  /**
+   * Push a new log entry to the box.
+   * @param text Log message
+   * @param color Optional color to use
+   */
   const log = (text: string, color: number = 0xffffff) => {
     lines.push({
       text,
@@ -37,6 +51,9 @@ export function createLogBox (options: Partial<ILogBoxOptions>) {
     }
   }
 
+  /**
+   * Render the log box, returning an array of strings.
+   */
   const render = (): string[] => {
     const out: string[] = []
     lines.forEach((line, idx) => {
@@ -61,6 +78,11 @@ export function createLogBox (options: Partial<ILogBoxOptions>) {
 
 type RGB = [ number, number, number ]
 
+/**
+ * Converts a hex number into RGB values
+ * @param hex Color code in hex notation (e.g. 0xff0000)
+ * @return Tuple containing R, G, B number values (0-255)
+ */
 function hexToRgb (hex: number): RGB {
   return [
     (hex >> 16) & 255,
@@ -68,14 +90,29 @@ function hexToRgb (hex: number): RGB {
     hex & 255,
   ]
 }
+
+/**
+ * Converts an RGB tuple into hex number
+ * @todo Unused
+ */
 function rgbToHex (r: number, g: number, b: number): number {
   return (1 << 24) + (r << 16) + (g << 8) + b
 }
 
+/**
+ * Min/max number clamp shortcut
+ * @param value Number to clamp
+ * @param min Minimum value
+ * @param max Maximum value
+ */
 function clamp (value: number, min = 0, max = 1): number {
   return Math.max(min, Math.min(max, value))
 }
 
+/**
+ * Blends two colors together
+ * @todo Unused
+ */
 function blend (left: number, right: number, amount: number): RGB {
   const lrgb = hexToRgb(left)
   const rrgb = hexToRgb(right)
@@ -83,6 +120,12 @@ function blend (left: number, right: number, amount: number): RGB {
   return lrgb.map((c, i) => c + Math.round((rrgb[i] - c) * amount)) as RGB
 }
 
+/**
+ * Fades between a range of hex colors
+ * @param amount Fade or progress amount betwee 0 and 1
+ * @param colors Hex colors to fade between, at least two are required
+ * @return RGB tuple
+ */
 function blendRange (amount: number, ...colors: number[]): RGB {
   if (colors.length < 2) {
     throw new Error('At least two colors must be provided')
