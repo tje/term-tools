@@ -71,7 +71,7 @@ type IAnimatedBarConfig = {
   /** Width of bar in characters */
   width: number
   /** Animation duration in milliseconds */
-  speed: number
+  duration: number
   /** Character set to use, must be at least 3 characters */
   characters: string
   /** Easing function */
@@ -81,10 +81,17 @@ type IAnimatedBar = {
   /**
    * Update the percentage value of the progress bar
    * @param {number} progress Number between 0 and 1
+   * @param {number} speed Override with custom duration (0 = immediate)
    */
-  update: (progress: number) => void
+  update (progress: number, duration?: number): void
   /** Returns the rendered progress bar as a string */
-  toString: () => string
+  toString (): string
+  /** Animated progress value between 0 and 1 */
+  progress: number
+  /** Whether bar is currently animating or not */
+  isAnimating: boolean
+  /** Remaining animation time in milliseconds */
+  timeLeft: number
 }
 /**
  * Creates a progress bar that animates as it is drawn.
@@ -99,7 +106,7 @@ export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig>): 
 export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | IAnimatedBarConfig['width']): IAnimatedBar {
   const opts: IAnimatedBarConfig = {
     width: 10,
-    speed: 500,
+    duration: 500,
     characters: PROGRESS_BAR.SHADED,
     ease: (x) => x,
   }
@@ -109,26 +116,28 @@ export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | 
     Object.assign(opts, configOrWidth)
   }
   opts.width = Math.max(0, Math.min(Number.MAX_SAFE_INTEGER, opts.width))
-  opts.speed = Math.max(0, opts.speed)
+  opts.duration = Math.max(0, opts.duration)
 
-  const { speed, width, characters, ease } = opts
+  const { duration, width, characters, ease } = opts
 
+  let _dur = duration
   let startTs = Date.now()
   let from = 0
   let to = 0
 
-  const update = (pos: number) => {
-    if (pos === to) {
+  const update = (pos: number, duration?: number) => {
+    if (pos === to && duration === undefined) {
       return
     }
     from = getPos()
     to = pos
     startTs = Date.now()
+    _dur = Math.max(0, duration ?? opts.duration)
   }
 
   const getPos = () => {
-    const timePos = ease(Math.min(1, (Date.now() - startTs) / speed))
-    const pos = from + (to - from) * timePos
+    const timePos = ease(Math.min(1, (Date.now() - startTs) / _dur))
+    const pos = Math.max(0, Math.min(1, from + (to - from) * timePos))
     return pos
   }
 
@@ -148,6 +157,15 @@ export function createAnimatedBar (configOrWidth: Partial<IAnimatedBarConfig> | 
         case 'number':
           return getPos()
       }
+    },
+    get progress () {
+      return getPos()
+    },
+    get isAnimating () {
+      return Date.now() < startTs + _dur
+    },
+    get timeLeft () {
+      return Math.max(0, (startTs + _dur) - Date.now())
     },
   }
 }

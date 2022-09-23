@@ -2,10 +2,11 @@
   "name": "term-tools",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index",
+  "types": "dist/index",
   "scripts": {
     "sc": "ts-node --",
-    "build": "tsc",
+    "build": "rm -rf dist && tsc -b",
     "test": "./node_modules/uvu/bin.js -r tsm"
   },
   "keywords": [],
