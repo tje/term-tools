@@ -9,6 +9,8 @@ type ILogBoxOptions = {
   fadeDelay: number
   /** Fade on log entry ('instant') or replacement ('succession') */
   fadeMode: 'instant' | 'succession'
+  /** Initialize with empty lines on creation if true */
+  fill: boolean
   /** Animation easing function */
   ease: (x: number) => number
 }
@@ -29,25 +31,37 @@ export function createLogBox (options: Partial<ILogBoxOptions>) {
     fadeDuration: 1000,
     fadeDelay: 500,
     fadeMode: 'instant',
+    fill: true,
     ease: EASING.CUBIC_OUT,
     ...options,
   }
 
   const lines: ILogLine[] = []
+  while (opts.fill && lines.length < opts.height) {
+    lines.push({ text: '', ts: 0, color: 0xffffff })
+  }
 
   /**
    * Push a new log entry to the box.
-   * @param text Log message
+   * @param msg Log message
    * @param color Optional color to use
    */
-  const log = (text: string, color: number = 0xffffff) => {
-    lines.push({
-      text,
-      ts: Date.now(),
-      color,
-    })
+  const log = (msg: string, color: number = 0xffffff) => {
+    const ts = Date.now()
+    const entries = msg.split('\n')
+      .map((text) => ({
+        text,
+        ts,
+        color,
+      }))
+    lines.push(...entries)
     if (lines.length > opts.height) {
       lines.splice(0, lines.length - opts.height)
+    }
+    return (m: string) => {
+      m.split('\n').slice(0 - entries.length).forEach((l, idx) => {
+        entries[idx].text = l
+      })
     }
   }
 
