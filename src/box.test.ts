@@ -67,4 +67,21 @@ test('drawBox: anchor bottom', () => {
   assert.equal(box[3], '│ e │')
 })
 
+test('drawBox: empty label', () => {
+  const box = drawBox({
+    label: '',
+    content: ['a'],
+  })
+  assert.equal(box[0], '┌───┐')
+})
+
+test('drawBox: truncate label', () => {
+  const box = drawBox({
+    label: 'abcdefghijklmnop',
+    content: ['a'],
+    width: 5,
+  })
+  assert.equal(box[0], '┌ a ┐')
+})
+
 test.run()
