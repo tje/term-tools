@@ -11,12 +11,17 @@ type IBoxConfig = {
   vAlign?: 'top' | 'bottom'
   /** Horizontal alignment of content */
   hAlign?: 'left' | 'right'
+  /** Side to anchor content when lines exceeds vertical height */
+  vAnchor?: 'top' | 'bottom'
   /** Label position */
   labelPosition?: 'top' | 'bottom'
 }
 
 export function drawBox (opts: IBoxConfig): string[] {
   const label = opts.label
+  const vAnchor = opts.vAnchor
+    ?? opts.vAlign
+    ?? 'top'
 
   let lines = opts.content
   if (!Array.isArray(lines)) {
@@ -45,7 +50,11 @@ export function drawBox (opts: IBoxConfig): string[] {
       body.push(...filler)
     }
   }
-  body.splice(ih)
+  if (vAnchor === 'bottom') {
+    body.splice(0, body.length - ih)
+  } else {
+    body.splice(ih)
+  }
 
   const H = '─'
   const V = '│'
