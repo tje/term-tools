@@ -95,12 +95,16 @@ console.log(graph2.join('\n'))
   - `config.ease` Custom easing function to use
 
 ```js
+// Create a log box with default options
 const logBox = tt.createLogBox()
-setInterval(() => {
-  logBox.log('Message')
-}, 1000)
+logBox.log('First message!')
+
+// Add another message every second
+setInterval(() => logBox.log('Message'), 1000)
+
+// Redraw the log box every 20ms
 setInterval(() => {
   console.clear()
   console.log(logBox.render().join('\n'))
-})
+}, 20)
 ```
