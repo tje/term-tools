@@ -108,3 +108,41 @@ setInterval(() => {
   console.log(logBox.render().join('\n'))
 }, 20)
 ```
+
+### Bordered boxes
+
+`drawBox(config)`
+- `config` Box settings:
+  - `config.content` Array of strings making up the body of the box
+  - `config.label` *(optional)* Box title, fit into the border
+  - `config.labelPosition` *(optional)* Label position (`"top" | "bottom"`)
+  - `config.width` *(optional)* Fixed outer width of the box in characters
+  - `config.height` *(optional)* Fixed outer height of the box in lines
+  - `config.vAlign` *(optional)* Vertical alignment of content (`"top" | "bottom"`)
+  - `config.hAlign` *(optional)* Horizontal alignment of content (`"left" | "right"`)
+  - `config.characters` *(optional)* Custom character set to use for borders
+
+```js
+// Draw a single box
+const box = tt.drawBox({
+  label: 'One',
+  width: 20,
+  height: 5,
+  content: [
+    'First line',
+    'Second line',
+  ],
+})
+console.log(box.join('\n'))
+
+// Draw two boxes side-by-side
+const box2 = tt.drawBox({
+  label: 'Two',
+  width: 20,
+  height: 5,
+  content: [
+    'Another box!',
+  ],
+})
+console.log(tt.joinLines(box, box2).join('\n'))
+```
