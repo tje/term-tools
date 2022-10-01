@@ -3,9 +3,9 @@ type IBoxConfig = {
   label: string
   /** Box content */
   content: string | string[]
-  /** Inner box width in characters */
+  /** Outer box width in characters, including borders and padding */
   width?: number
-  /** Inner box height in lines */
+  /** Outer box height in lines, including borders */
   height?: number
   /** Vertical alignment of content when lines is less than height */
   vAlign?: 'top' | 'bottom'
@@ -24,21 +24,26 @@ export function drawBox (opts: IBoxConfig): string[] {
   const body = lines.map((l) => l.split('\n'))
     .flat()
     .map((l) => LogLine.from(l))
-  const iw = opts.width
-    ?? Math.max(...body.map((l) => l.text.length), label.length + 2)
 
-  if (opts.height) {
-    if (body.length < opts.height) {
-      const filler = new Array(opts.height - body.length)
-        .fill(' '.repeat(iw))
-      if (opts.vAlign === 'bottom') {
-        body.unshift(...filler)
-      } else {
-        body.push(...filler)
-      }
+  const iw = opts.width
+    ? opts.width - 4
+    : Math.max(...body.map((l) => l.text.length), label.length)
+
+  const ih = opts.height
+    ? opts.height - 2
+    : body.length
+
+  if (body.length < ih) {
+    const filler = new Array(ih - body.length)
+      .fill(' '.repeat(iw))
+      .map((l) => LogLine.from(l))
+    if (opts.vAlign === 'bottom') {
+      body.unshift(...filler)
+    } else {
+      body.push(...filler)
     }
-    body.splice(opts.height)
   }
+  body.splice(ih)
 
   const H = '─'
   const V = '│'
@@ -48,12 +53,12 @@ export function drawBox (opts: IBoxConfig): string[] {
   const BR = '┘'
 
   const labelLen = label.length // @todo w/ LogLine
-  const hl = H.repeat(Math.floor((iw - labelLen) / 2 - 1))
-  const hr = H.repeat(Math.ceil((iw - labelLen) / 2 - 1))
+  const hl = H.repeat(Math.floor((iw - labelLen) / 2))
+  const hr = H.repeat(Math.ceil((iw - labelLen) / 2))
   const headerLine = `${hl} ${label} ${hr}`
 
-  let header = H.repeat(iw)
-  let footer = H.repeat(iw)
+  let header = H.repeat(iw + 2)
+  let footer = H.repeat(iw + 2)
   if (opts.labelPosition === 'bottom') {
     footer = headerLine
   } else {
@@ -61,14 +66,14 @@ export function drawBox (opts: IBoxConfig): string[] {
   }
 
   const out = [
-    `${TL}${H}${header}${H}${TR}`,
+    `${TL}${header}${TR}`,
     ...body.map((l) => {
       const line = l.truncate(iw)
       const text = line.toString()
       const sp = ' '.repeat(Math.max(0, iw - line.text.length))
       return `${V} ${text + sp} ${V}`
     }),
-    `${BL}${H}${footer}${H}${BR}`,
+    `${BL}${footer}${BR}`,
   ]
   return out
 }
@@ -146,6 +151,16 @@ class LogLine {
 
 export const createLogLine = (s: string) => LogLine.from(s)
 
+/**
+ * Lateral concatenation of groups of lines
+ *
+ * @example
+ * joinLines(
+ *   ['a', 'b'],
+ *   ['c', 'd'],
+ * )
+ * // ['ac', 'bd']
+ */
 export const joinLines = (...groups: string[][]) => {
   const out: string[] = []
   const maxRows = Math.max(...groups.map((g) => g.length))
