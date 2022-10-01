@@ -28,6 +28,8 @@ type IBoxConfig = {
   labelPosition?: 'top' | 'bottom'
   /** Custom border character set to use */
   characters?: IBoxCharacters
+  /** Customizable border color, should match valid ansi escape sequence */
+  borderColor?: string
 }
 
 export function drawBox (opts: IBoxConfig): string[] {
@@ -72,7 +74,18 @@ export function drawBox (opts: IBoxConfig): string[] {
     body.splice(ih)
   }
 
-  const { H, V, TL, TR, BL, BR } = opts.characters ?? BORDERS.SHARP
+  const characters = { ...(opts.characters ?? BORDERS.SHARP) }
+  if (opts.borderColor?.match(/^(\u001b\[[\d;]+m)+$/)) {
+    const bc = Object.entries(characters).reduce(
+      (acc, [ key, val ]) => ({
+        ...acc,
+        [key]: `${opts.borderColor}${val}\x1b[0m`,
+      }),
+      {},
+    )
+    Object.assign(characters, bc)
+  }
+  const { H, V, TL, TR, BL, BR } = characters
 
   const straight = H.repeat(iw + 2)
   const hl = H.repeat(Math.floor((iw - labelLen) / 2))
