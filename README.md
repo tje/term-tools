@@ -1,3 +1,7 @@
+Poorly documented miscellaneous terminal utilities that I use sometimes.
+
+![COOL GIF](./demo.gif)
+
 ## Usage
 
 ### Progress bars
