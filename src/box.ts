@@ -9,6 +9,8 @@ type IBoxConfig = {
   height?: number
   /** Vertical alignment of content when lines is less than height */
   vAlign?: 'top' | 'bottom'
+  /** Horizontal alignment of content */
+  hAlign?: 'left' | 'right'
   /** Label position */
   labelPosition?: 'top' | 'bottom'
 }
@@ -71,7 +73,11 @@ export function drawBox (opts: IBoxConfig): string[] {
       const line = l.truncate(iw)
       const text = line.toString()
       const sp = ' '.repeat(Math.max(0, iw - line.text.length))
-      return `${V} ${text + sp} ${V}`
+      let entry = text + sp
+      if (opts.hAlign === 'right') {
+        entry = sp + text
+      }
+      return `${V} ${entry} ${V}`
     }),
     `${BL}${footer}${BR}`,
   ]
