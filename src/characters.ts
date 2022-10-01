@@ -44,3 +44,38 @@ export const GRAPH = {
     ' ▁▂▃▄▅▆▇█',
   ],
 }
+
+export const BORDERS = {
+  SHARP: {
+    H: '─',
+    V: '│',
+    TL: '┌',
+    TR: '┐',
+    BL: '└',
+    BR: '┘',
+  },
+  ROUNDED: {
+    H: '─',
+    V: '│',
+    TL: '╭',
+    TR: '╮',
+    BL: '╰',
+    BR: '╯',
+  },
+  THICK: {
+    H: '━',
+    V: '┃',
+    TL: '┏',
+    TR: '┓',
+    BL: '┗',
+    BR: '┛',
+  },
+  DOUBLE: {
+    H: '═',
+    V: '║',
+    TL: '╔',
+    TR: '╗',
+    BL: '╚',
+    BR: '╝',
+  },
+}

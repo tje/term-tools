@@ -1,3 +1,14 @@
+import { BORDERS } from './characters'
+
+type IBoxCharacters = {
+  H: string
+  V: string
+  TR: string
+  TL: string
+  BL: string
+  BR: string
+}
+
 type IBoxConfig = {
   /** Label embedded in the border of the box */
   label?: string
@@ -15,6 +26,8 @@ type IBoxConfig = {
   vAnchor?: 'top' | 'bottom'
   /** Label position */
   labelPosition?: 'top' | 'bottom'
+  /** Custom border character set to use */
+  characters?: IBoxCharacters
 }
 
 export function drawBox (opts: IBoxConfig): string[] {
@@ -57,12 +70,7 @@ export function drawBox (opts: IBoxConfig): string[] {
     body.splice(ih)
   }
 
-  const H = '─'
-  const V = '│'
-  const TL = '┌'
-  const TR = '┐'
-  const BL = '└'
-  const BR = '┘'
+  const { H, V, TL, TR, BL, BR } = opts.characters ?? BORDERS.SHARP
 
   const straight = H.repeat(iw + 2)
   const hl = H.repeat(Math.floor((iw - labelLen) / 2))
