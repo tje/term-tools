@@ -82,3 +82,25 @@ const graph2 = tt.barChart(series, {
 })
 console.log(graph2.join('\n'))
 ```
+
+### Log boxes
+
+`createLogBox([config])`
+- `config` Log box options, all optional:
+  - `config.height` Maximum number of lines
+  - `config.fadeDuration` Animation duration in milliseconds
+  - `config.fadeDelay` Delay before animation starts (milliseconds)
+  - `config.fadeMode` If set to `"succession"`, messages only begin animating when they're succeeded by another
+  - `config.fill` If true, content is initialized with empty lines based on `height`
+  - `config.ease` Custom easing function to use
+
+```js
+const logBox = tt.createLogBox()
+setInterval(() => {
+  logBox.log('Message')
+}, 1000)
+setInterval(() => {
+  console.clear()
+  console.log(logBox.render().join('\n'))
+})
+```
