@@ -25,7 +25,7 @@ type ILogLine = {
  * Creates a log box widget that renders a limited set of lines with animated
  * color fade.
  */
-export function createLogBox (options: Partial<ILogBoxOptions>) {
+export function createLogBox (options: Partial<ILogBoxOptions> = {}) {
   const opts: ILogBoxOptions = {
     height: 10,
     fadeDuration: 1000,
