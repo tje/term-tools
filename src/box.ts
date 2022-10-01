@@ -88,9 +88,11 @@ export function drawBox (opts: IBoxConfig): string[] {
   const { H, V, TL, TR, BL, BR } = characters
 
   const straight = H.repeat(iw + 2)
-  const hl = H.repeat(Math.floor((iw - labelLen) / 2))
-  const hr = H.repeat(Math.ceil((iw - labelLen) / 2))
-  const headerLine = label ? `${hl} ${label.toString()} ${hr}` : straight
+  const hl = H.repeat(Math.floor(Math.max(0, (iw - labelLen)) / 2))
+  const hr = H.repeat(Math.ceil(Math.max(0, (iw - labelLen)) / 2))
+  const headerLine = label
+    ? `${hl} ${label.truncate(iw).toString()} ${hr}`
+    : straight
 
   let header = straight
   let footer = straight
