@@ -1,6 +1,6 @@
 type IBoxConfig = {
   /** Label embedded in the border of the box */
-  label: string
+  label?: string
   /** Box content */
   content: string | string[]
   /** Outer box width in characters, including borders and padding */
@@ -19,6 +19,7 @@ type IBoxConfig = {
 
 export function drawBox (opts: IBoxConfig): string[] {
   const label = opts.label
+  const labelLen = label?.length ?? 0 // @todo w/ LogLine
   const vAnchor = opts.vAnchor
     ?? opts.vAlign
     ?? 'top'
@@ -34,7 +35,7 @@ export function drawBox (opts: IBoxConfig): string[] {
 
   const iw = opts.width
     ? opts.width - 4
-    : Math.max(...body.map((l) => l.text.length), label.length)
+    : Math.max(...body.map((l) => l.text.length), labelLen)
 
   const ih = opts.height
     ? opts.height - 2
@@ -63,13 +64,13 @@ export function drawBox (opts: IBoxConfig): string[] {
   const BL = '└'
   const BR = '┘'
 
-  const labelLen = label.length // @todo w/ LogLine
+  const straight = H.repeat(iw + 2)
   const hl = H.repeat(Math.floor((iw - labelLen) / 2))
   const hr = H.repeat(Math.ceil((iw - labelLen) / 2))
-  const headerLine = `${hl} ${label} ${hr}`
+  const headerLine = label ? `${hl} ${label} ${hr}` : straight
 
-  let header = H.repeat(iw + 2)
-  let footer = H.repeat(iw + 2)
+  let header = straight
+  let footer = straight
   if (opts.labelPosition === 'bottom') {
     footer = headerLine
   } else {
