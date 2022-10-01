@@ -32,7 +32,9 @@ type IBoxConfig = {
 
 export function drawBox (opts: IBoxConfig): string[] {
   const label = opts.label
-  const labelLen = label?.length ?? 0 // @todo w/ LogLine
+    ? LogLine.from(opts.label)
+    : null
+  const labelLen = label?.text.length ?? 0
   const vAnchor = opts.vAnchor
     ?? opts.vAlign
     ?? 'top'
@@ -75,7 +77,7 @@ export function drawBox (opts: IBoxConfig): string[] {
   const straight = H.repeat(iw + 2)
   const hl = H.repeat(Math.floor((iw - labelLen) / 2))
   const hr = H.repeat(Math.ceil((iw - labelLen) / 2))
-  const headerLine = label ? `${hl} ${label} ${hr}` : straight
+  const headerLine = label ? `${hl} ${label.toString()} ${hr}` : straight
 
   let header = straight
   let footer = straight
