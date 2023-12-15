@@ -75,7 +75,7 @@ const bgBox = drawBox({
 const generateContent = () => {
   const content = bgBox.slice()
 
-  const boxCfg: Parameters<typeof drawBox>[0] = {
+  const boxCfg: Parameters<typeof drawBox>[0] & { content: string[] } = {
     width: BOX_WIDTH,
     height: BOX_HEIGHT,
     label: 'Modal',
