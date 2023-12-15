@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "sc": "node -r tsm --",
+    "sc": "tsm --",
     "build": "rollup -c rollup.config.js",
     "test": "./node_modules/uvu/bin.js -r tsm"
   },
@@ -31,7 +31,7 @@
     "rollup": "^4.9.0",
     "rollup-plugin-dts": "^6.1.0",
     "tslib": "^2.6.2",
-    "tsm": "^2.2.1",
+    "tsm": "^2.3.0",
     "typescript": "^5.3.3",
     "uvu": "^0.5.3"
   }
