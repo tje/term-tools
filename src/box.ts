@@ -140,7 +140,7 @@ type ILogLineControl = [number, string]
  *    as cursor movements correctly, need to test and maybe switch to preserving
  *    all codes?
  */
-class LogLine {
+export class LogLine {
   constructor (private _text: string, private _controls: ILogLineControl[]) {}
 
   /**
@@ -171,14 +171,20 @@ class LogLine {
   }
 
   public truncate (len: number): LogLine {
-    const text = this.text.substring(0, len)
-    const lastControl = this.controls
-      .find(([ idx ]) => idx === this.text.length)
-    const controls = this.controls.filter(([ idx ]) => idx < len)
-    if (lastControl) {
-      lastControl[0] = text.length
-      controls.push(lastControl)
-    }
+    return this.substring(0, len)
+  }
+
+  public substring (start: number, end?: number): LogLine {
+    const idxStart = start < 0
+      ? this.text.length + start
+      : start
+    const idxStop = end ?? this.text.length
+    const text = this.text.substring(idxStart, idxStop)
+    const controls = this.controls
+      .map((control) => {
+        const idx = Math.max(0, Math.min(idxStop, control[0] - idxStart))
+        return [idx, control[1]]
+      }) as ILogLineControl[]
     return new LogLine(text, controls)
   }
 
