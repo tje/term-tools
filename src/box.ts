@@ -81,7 +81,7 @@ export function drawBox (opts: IBoxConfig): string[] {
     const bc = Object.entries(characters).reduce(
       (acc, [ key, val ]) => ({
         ...acc,
-        [key]: `${opts.borderColor}${val}\x1b[0m`,
+        [key]: `${opts.borderColor}${val}\x1b[39m`,
       }),
       {},
     )
