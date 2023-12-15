@@ -30,6 +30,8 @@ type IBoxConfig = {
   characters?: IBoxCharacters
   /** Customizable border color, should match valid ansi escape sequence */
   borderColor?: string
+  /** Customizable background color */
+  backgroundColor?: string
 }
 
 export function drawBox (opts: IBoxConfig): string[] {
@@ -116,7 +118,12 @@ export function drawBox (opts: IBoxConfig): string[] {
     }),
     `${BL}${footer}${BR}`,
   ]
-  return out
+  return out.map((l) => {
+    if (opts.backgroundColor) {
+      return `${opts.backgroundColor}${l}\x1b[49m`
+    }
+    return l
+  })
 }
 
 // https://github.com/chalk/ansi-regex
