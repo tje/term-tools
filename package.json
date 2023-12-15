@@ -19,7 +19,8 @@
     "sc": "tsm --",
     "example:modal": "tsm src/examples/modal.ts",
     "build": "rollup -c rollup.config.js",
-    "test": "./node_modules/uvu/bin.js -r tsm"
+    "test": "./node_modules/uvu/bin.js -r tsm",
+    "prepack": "npm run build"
   },
   "keywords": [],
   "author": "",
